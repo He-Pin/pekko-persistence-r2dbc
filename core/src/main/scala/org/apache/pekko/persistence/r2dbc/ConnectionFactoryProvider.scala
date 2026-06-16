@@ -19,6 +19,7 @@ import java.util.concurrent.ConcurrentHashMap
 import scala.concurrent.Future
 import scala.concurrent.duration.Duration
 import scala.jdk.CollectionConverters._
+import scala.language.existentials
 import scala.util.Failure
 import scala.util.Success
 
