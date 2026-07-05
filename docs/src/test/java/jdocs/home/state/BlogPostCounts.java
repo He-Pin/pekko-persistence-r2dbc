@@ -34,6 +34,7 @@ import java.util.concurrent.CompletionStage;
  * CREATE TABLE post_count (slice INT NOT NULL, cnt BIGINT NOT NULL, PRIMARY KEY(slice));
  * </pre>
  */
+@SuppressWarnings("unchecked")
 public class BlogPostCounts implements ChangeHandler<BlogPost.State> {
 
   private final ActorSystem<?> system;

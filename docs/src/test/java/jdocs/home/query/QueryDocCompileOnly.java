@@ -42,6 +42,7 @@ import org.apache.pekko.persistence.query.UpdatedDurableState;
 
 // #currentChangesBySlices
 
+@SuppressWarnings("unchecked")
 public class QueryDocCompileOnly {
 
   interface MyEvent {}

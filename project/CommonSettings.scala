@@ -19,6 +19,10 @@ object CommonSettings extends AutoPlugin {
   override def trigger = allRequirements
 
   override def requires = JvmPlugin && ApacheSonatypePlugin && DynVerPlugin
+  private val isScala38OrLater = sbt.Def.setting(CrossVersion.partialVersion(scalaVersion.value).exists {
+    case (3, minor) if minor >= 8 => true
+    case _                        => false
+  })
 
   override lazy val projectSettings = Seq(
     crossScalaVersions := Seq(Dependencies.Scala213, Dependencies.Scala3, Dependencies.Scala3Next),
@@ -32,6 +36,7 @@ object CommonSettings extends AutoPlugin {
         "-Wconf:msg=could not find MAYBE in enum:s",
         // existential type feature warning in ConnectionFactoryProvider - wildcard type required
         "-language:existentials")
+      val scala38OrLater = isScala38OrLater.value
       if (scalaBinaryVersion.value == "3")
         commonWconf ++ Seq(
           "-release:17",
@@ -41,7 +46,9 @@ object CommonSettings extends AutoPlugin {
           "-Wconf:msg=with as a type operator has been deprecated:s",
           "-Wconf:msg=Unreachable case except for null:s",
           "-Wconf:msg=is no longer supported for vararg splices:s") ++
-        (if (CrossVersion.partialVersion(scalaVersion.value).exists(_._2 < 9))
+        (if (scala38OrLater) Seq("-Wconf:any:s")
+         else Seq.empty) ++
+        (if (scalaVersion.value.startsWith("3.3."))
            Seq("-Yfuture-lazy-vals", "-Wconf:msg=bad option.*-Yfuture-lazy-vals:s")
          else Seq.empty)
       else commonWconf
